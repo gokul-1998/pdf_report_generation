@@ -86,5 +86,44 @@ def index():
 @app.route('/pdf',methods=['GET'])
 def pdfmaker():
     return render_template('newpdf.html',email='abc@gmail.com',name='abc',start_date='2024-02-06', end_date='2024-05-06')
+
+
+@app.route("/pdfa")
+def index():
+    # Render your HTML template
+    data={}
+    data["email"]="gokulakrishnanm1998@gmail.com"
+    data["name"]="Gokulakrishnan"
+    data["start_date"]="2024-02-06"
+    data["end_date"]="2024-05-06"
+    env = Environment(loader=FileSystemLoader('.'))
+    
+    # Render the HTML template with the provided data
+    template = env.get_template('templates/newpdf.html')
+    html_content = template.render(email=data['email'], name=data['name'], 
+                            start_date=data['start_date'], end_date=data['end_date'])
+
+
+    rendered_html = render_template('index.html')
+
+    # Convert rendered HTML to PDF using WeasyPrint
+    pdf_content = HTML(string=rendered_html).write_pdf()
+
+    # Create response
+    response = make_response(pdf_content)
+
+
+
+# Convert HTML to PDF
+pdf_content = HTML(string=html_content).write_pdf()
+
+# Create response
+response = make_response(pdf_content)
+response.headers['Content-Type'] = 'application/pdf'
+response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
+
+return response
+
+
 if __name__ == '__main__':
     app.run(debug=True)

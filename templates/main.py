@@ -6,20 +6,15 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
+import pdfkit
 
-from flask import Flask, render_template, request
-from jinja2 import Template
-from jinja2 import Environment, FileSystemLoader
-import os
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.application import MIMEApplication
-from flask import Flask, render_template, make_response
-from weasyprint import HTML
 
 app = Flask(__name__)
+
+wkhtml_path = pdfkit.configuration(wkhtmltopdf = "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")  #by using configuration you can add path value.
 
 
 def create_pdf(data, filename):
@@ -32,15 +27,8 @@ def create_pdf(data, filename):
                            start_date=data['start_date'], end_date=data['end_date'])
     
     # Convert HTML to PDF
-    pdf_content = HTML(string=html_content).write_pdf()
-
-    # Create response
-    response = make_response(pdf_content)
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-
-    return response
-
+    pdfkit.from_string(html_content, filename, configuration=wkhtml_path)
+    
     
 def send_email_attachment(To, subject, message, data):
     msg = MIMEMultipart()
@@ -86,5 +74,7 @@ def index():
 @app.route('/pdf',methods=['GET'])
 def pdfmaker():
     return render_template('newpdf.html',email='abc@gmail.com',name='abc',start_date='2024-02-06', end_date='2024-05-06')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
