@@ -112,18 +112,23 @@ def aa():
     # Create response
     response = make_response(pdf_content)
 
-
-
-# # Convert HTML to PDF
-# pdf_content = HTML(string=html_content).write_pdf()
-
-# # Create response
-# response = make_response(pdf_content)
-# response.headers['Content-Type'] = 'application/pdf'
-# response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-
     return response
 
+
+@app.route('/abc')
+def index():
+    # Render your HTML template
+    rendered_html = render_template('aa.html',name="gokul")
+
+    # Convert rendered HTML to PDF using WeasyPrint
+    pdf_content = HTML(string=rendered_html).write_pdf()
+
+    # Create response
+    response = make_response(pdf_content)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
+
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
