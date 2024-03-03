@@ -89,7 +89,7 @@ def pdfmaker():
 
 
 @app.route("/pdfa")
-def index():
+def aa():
     # Render your HTML template
     data={}
     data["email"]="gokulakrishnanm1998@gmail.com"
