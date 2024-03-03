@@ -114,15 +114,15 @@ def index():
 
 
 
-# Convert HTML to PDF
-pdf_content = HTML(string=html_content).write_pdf()
+# # Convert HTML to PDF
+# pdf_content = HTML(string=html_content).write_pdf()
 
-# Create response
-response = make_response(pdf_content)
-response.headers['Content-Type'] = 'application/pdf'
-response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
+# # Create response
+# response = make_response(pdf_content)
+# response.headers['Content-Type'] = 'application/pdf'
+# response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
 
-return response
+    return response
 
 
 if __name__ == '__main__':
