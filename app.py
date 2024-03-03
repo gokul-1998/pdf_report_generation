@@ -116,7 +116,7 @@ def aa():
 
 
 @app.route('/abc')
-def index():
+def indexa():
     # Render your HTML template
     rendered_html = render_template('aa.html',name="gokul")
 
