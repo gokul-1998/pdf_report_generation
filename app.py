@@ -24,15 +24,33 @@ app = Flask(__name__)
 
 def create_pdf(data, filename):
     # Load the Jinja2 environment
-    env = Environment(loader=FileSystemLoader('.'))
+    # env = Environment(loader=FileSystemLoader('.'))
     
-    # Render the HTML template with the provided data
-    template = env.get_template('templates/newpdf.html')
-    html_content = template.render(email=data['email'], name=data['name'], 
+    # # Render the HTML template with the provided data
+    # template = env.get_template('templates/newpdf.html')
+    # html_content = template.render(email=data['email'], name=data['name'], 
+    #                        start_date=data['start_date'], end_date=data['end_date'])
+    
+    # # Convert HTML to PDF
+    # pdf_content = HTML(string=html_content).write_pdf()
+
+    # # Create response
+    # response = make_response(pdf_content)
+    # response.headers['Content-Type'] = 'application/pdf'
+    # response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
+
+    # return response
+
+
+    rendered_html = render_template('newpdf.html',email=data['email'], name=data['name'], 
                            start_date=data['start_date'], end_date=data['end_date'])
-    
-    # Convert HTML to PDF
-    pdf_content = HTML(string=html_content).write_pdf()
+
+    # Convert rendered HTML to PDF using WeasyPrint
+    pdf_content = HTML(string=rendered_html).write_pdf()
+    # to save the pdf
+    with open(data['email']+'.pdf', 'wb') as f:
+        f.write(pdf_content)
+
 
     # Create response
     response = make_response(pdf_content)
@@ -40,6 +58,7 @@ def create_pdf(data, filename):
     response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
 
     return response
+
 
     
 def send_email_attachment(To, subject, message, data):
@@ -122,6 +141,10 @@ def indexa():
 
     # Convert rendered HTML to PDF using WeasyPrint
     pdf_content = HTML(string=rendered_html).write_pdf()
+    # to save the pdf
+    with open('output.pdf', 'wb') as f:
+        f.write(pdf_content)
+
 
     # Create response
     response = make_response(pdf_content)
